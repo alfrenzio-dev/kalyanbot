@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администратор кальянного бара</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            background-color: var(--secondary-color);
+        }
+
+        .page {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button.danger {
+            background-color: var(--accent-color);
+        }
+
+        button.danger:hover {
+            background-color: #c0392b;
+        }
+
+        button.success {
+            background-color: var(--success-color);
+        }
+
+        button.success:hover {
+            background-color: #27ae60;
+        }
+
+        .order-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .order-card {
+            border-left: 4px solid var(--secondary-color);
+            position: relative;
+        }
+
+        .order-card.completed {
+            border-left-color: var(--success-color);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .order-table {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .order-total {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .order-items {
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .order-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .product-categories {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .category-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .category-tab.active {
+            border-bottom-color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            color: var(--accent-color);
+        }
+
+        .current-order {
+            position: sticky;
+            bottom: 0;
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .current-order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .current-order-items {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .current-order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .current-order-total {
+            font-weight: bold;
+            font-size: 18px;
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th, .history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .history-table th {
+            background-color: var(--light-color);
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-name {
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Кальянный бар "Дымок"</div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-page="main">Главная</a></li>
+                    <li><a href="#" class="nav-link" data-page="create-order">Создать заказ</a></li>
+                    <li><a href="#" class="nav-link" data-page="products">Продукты</a></li>
+                    <li><a href="#" class="nav-link" data-page="history">История заказов</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Главная страница -->
+        <div id="main" class="page active">
+            <h2>Текущие заказы</h2>
+            <div id="orders-list" class="order-list">
+                <!-- Заказы будут добавляться сюда динамически -->
+            </div>
+        </div>
+
+        <!-- Страница создания заказа -->
+        <div id="create-order" class="page">
+            <div class="card">
+                <h2>Создание нового заказа</h2>
+                <div class="form-group">
+                    <label for="table-number">Номер стола</label>
+                    <input type="number" id="table-number" min="1" max="50" placeholder="Введите номер стола">
+                </div>
+
+                <div class="product-categories">
+                    <div class="category-tab active" data-category="hookahs">Кальяны</div>
+                    <div class="category-tab" data-category="drinks">Напитки</div>
+                    <div class="category-tab" data-category="snacks">Перекус</div>
+                </div>
+
+                <div id="products-container" class="products-grid">
+                    <!-- Продукты будут добавляться сюда динамически -->
+                </div>
+            </div>
+
+            <div id="current-order" class="current-order card">
+                <div class="current-order-header">
+                    <h3>Текущий заказ</h3>
+                    <div>Стол: <span id="current-table">-</span></div>
+                </div>
+                <div id="current-order-items" class="current-order-items">
+                    <!-- Товары текущего заказа будут здесь -->
+                </div>
+                <div class="current-order-total">
+                    Итого: <span id="current-total">0</span> руб.
+                </div>
+                <div class="order-actions">
+                    <button id="clear-order">Очистить</button>
+                    <button id="create-order-btn" class="success">Создать заказ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница управления продуктами -->
+        <div id="products" class="page">
+            <div class="card">
+                <h2>Управление продуктами</h2>
+
+                <div class="form-group">
+                    <label for="product-category">Категория продукта</label>
+                    <select id="product-category">
+                        <option value="hookahs">Кальяны</option>
+                        <option value="drinks">Напитки</option>
+                        <option value="snacks">Перекус</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-name">Название продукта</label>
+                    <input type="text" id="product-name" placeholder="Введите название продукта">
+                </div>
+
+                <div class="form-group">
+                    <label for="product-price">Цена продукта (руб.)</label>
+                    <input type="number" id="product-price" min="0" placeholder="Введите цену продукта">
+                </div>
+
+                <button id="add-product-btn">Добавить продукт</button>
+            </div>
+
+            <div class="card">
+                <h2>Список продуктов</h2>
+                <div id="products-list">
+                    <!-- Продукты будут отображаться здесь -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница истории заказов -->
+        <div id="history" class="page">
+            <h2>История заказов</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-name">Всего заказов</div>
+                    <div class="stat-value" id="total-orders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">Общая выручка</div>
+                    <div class="stat-value" id="total-revenue">0</div>
+                    <div class="stat-name">руб.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">Средний чек</div>
+                    <div class="stat-value" id="average-check">0</div>
+                    <div class="stat-name">руб.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Стол</th>
+                            <th>Сумма</th>
+                            <th>Детали</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        <!-- История заказов будет здесь -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для завершения заказа -->
+    <div id="complete-order-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Завершение заказа</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="complete-order-details">
+                <!-- Детали заказа для завершения -->
+            </div>
+            <div class="order-actions">
+                <button class="close-modal">Отмена</button>
+                <button id="confirm-complete" class="success">Завершить заказ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления к заказу -->
+    <div id="add-to-order-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Добавление к заказу</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="product-categories">
+                <div class="category-tab active" data-category="hookahs">Кальяны</div>
+                <div class="category-tab" data-category="drinks">Напитки</div>
+                <div class="category-tab" data-category="snacks">Перекус</div>
+            </div>
+            <div id="add-products-container" class="products-grid">
+                <!-- Продукты для добавления будут здесь -->
+            </div>
+            <div class="order-actions">
+                <button class="close-modal">Отмена</button>
+                <button id="confirm-add" class="success">Добавить к заказу</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация данных приложения
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        let orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+        let currentOrder = {
+            table: null,
+            items: []
+        };
+        let selectedOrderId = null;
+
+        // Инициализация стандартных продуктов, если их нет
+        if (products.length === 0) {
+            products = [
+                { id: 1, name: "Кальян Фруктовый", category: "hookahs", price: 800 },
+                { id: 2, name: "Кальян Мятный", category: "hookahs", price: 850 },
+                { id: 3, name: "Кальян Ягодный", category: "hookahs", price: 900 },
+                { id: 4, name: "Кола", category: "drinks", price: 150 },
+                { id: 5, name: "Сок", category: "drinks", price: 120 },
+                { id: 6, name: "Чай", category: "drinks", price: 100 },
+                { id: 7, name: "Чипсы", category: "snacks", price: 200 },
+                { id: 8, name: "Орешки", category: "snacks", price: 150 },
+                { id: 9, name: "Сухарики", category: "snacks", price: 120 }
+            ];
+            saveProducts();
+        }
+
+        // Функции для работы с localStorage
+        function saveOrders() {
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+
+        function saveProducts() {
+            localStorage.setItem('products', JSON.stringify(products));
+        }
+
+        function saveOrderHistory() {
+            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+        }
+
+        // Навигация по страницам
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+                this.classList.add('active');
+                document.getElementById(this.dataset.page).classList.add('active');
+
+                // Обновляем данные на странице при переходе
+                if (this.dataset.page === 'main') {
+                    renderOrders();
+                } else if (this.dataset.page === 'history') {
+                    renderHistory();
+                }
+            });
+        });
+
+// Универсальный обработчик для вкладок категорий (работает в модальных окнах и на страницах)
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('category-tab')) {
+        const tab = e.target;
+        const modal = tab.closest('.modal');
+
+        if (modal) {
+            // Для модальных окон
+            const container = modal.querySelector('.products-grid');
+            const category = tab.dataset.category;
+
+            // Убираем активный класс у всех вкладок в этом модальном окне
+            modal.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            // Добавляем активный класс к текущей вкладке
+            tab.classList.add('active');
+
+            // Отображаем продукты выбранной категории
+            renderProductsByCategory(category, container);
+        } else {
+            // Для обычных страниц (существующий код)
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const category = tab.dataset.category;
+            const container = document.getElementById('products-container');
+            renderProductsByCategory(category, container);
+        }
+    }
+});
+        // Функция отображения продуктов по категории
+        function renderProductsByCategory(category, container) {
+            const categoryProducts = products.filter(p => p.category === category);
+            container.innerHTML = '';
+
+            categoryProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">${product.price} руб.</div>
+                `;
+                productCard.addEventListener('click', () => addToCurrentOrder(product));
+                container.appendChild(productCard);
+            });
+        }
+
+        // Добавление продукта в текущий заказ
+        function addToCurrentOrder(product) {
+            const existingItem = currentOrder.items.find(item => item.id === product.id);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                currentOrder.items.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1
+                });
+            }
+
+            updateCurrentOrderDisplay();
+        }
+
+        // Обновление отображения текущего заказа
+        function updateCurrentOrderDisplay() {
+            const itemsContainer = document.getElementById('current-order-items');
+            const totalElement = document.getElementById('current-total');
+            const tableElement = document.getElementById('current-table');
+
+            itemsContainer.innerHTML = '';
+            let total = 0;
+
+            currentOrder.items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'current-order-item';
+                itemElement.innerHTML = `
+                    <span>${item.name}</span>
+                    <span>${item.quantity} x ${item.price} руб.</span>
+                `;
+                itemsContainer.appendChild(itemElement);
+                total += item.quantity * item.price;
+            });
+
+            totalElement.textContent = total;
+            tableElement.textContent = currentOrder.table || '-';
+        }
+
+        // Создание нового заказа
+        document.getElementById('create-order-btn').addEventListener('click', function() {
+            const tableNumber = document.getElementById('table-number').value;
+
+            if (!tableNumber) {
+                alert('Пожалуйста, укажите номер стола');
+                return;
+            }
+
+            if (currentOrder.items.length === 0) {
+                alert('Пожалуйста, добавьте товары в заказ');
+                return;
+            }
+
+            currentOrder.table = tableNumber;
+
+            const newOrder = {
+                id: Date.now(),
+                table: currentOrder.table,
+                items: [...currentOrder.items],
+                total: currentOrder.items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                createdAt: new Date().toLocaleString('ru-RU')
+            };
+
+            orders.push(newOrder);
+            saveOrders();
+
+            // Сброс текущего заказа
+            currentOrder = {
+                table: null,
+                items: []
+            };
+            document.getElementById('table-number').value = '';
+            updateCurrentOrderDisplay();
+
+            // Переход на главную страницу
+            document.querySelector('.nav-link[data-page="main"]').click();
+
+            alert('Заказ успешно создан!');
+        });
+
+        // Очистка текущего заказа
+        document.getElementById('clear-order').addEventListener('click', function() {
+            currentOrder = {
+                table: null,
+                items: []
+            };
+            document.getElementById('table-number').value = '';
+            updateCurrentOrderDisplay();
+        });
+
+        // Отображение заказов на главной странице
+        function renderOrders() {
+            const ordersList = document.getElementById('orders-list');
+            ordersList.innerHTML = '';
+
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<div class="card">Нет активных заказов</div>';
+                return;
+            }
+
+            orders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card card';
+                orderCard.innerHTML = `
+                    <div class="order-header">
+                        <div class="order-table">Стол №${order.table}</div>
+                        <div class="order-total">${order.total} руб.</div>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                <span>${item.name}</span>
+                                <span>${item.quantity} x ${item.price} руб.</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-actions">
+                        <button class="add-to-order" data-id="${order.id}">Добавка</button>
+                        <button class="complete-order success" data-id="${order.id}">Завершить</button>
+                    </div>
+                `;
+                ordersList.appendChild(orderCard);
+            });
+
+            // Добавляем обработчики событий для кнопок
+            document.querySelectorAll('.add-to-order').forEach(button => {
+                button.addEventListener('click', function() {
+                    selectedOrderId = parseInt(this.dataset.id);
+                    openAddToOrderModal();
+                });
+            });
+
+            document.querySelectorAll('.complete-order').forEach(button => {
+                button.addEventListener('click', function() {
+                    selectedOrderId = parseInt(this.dataset.id);
+                    openCompleteOrderModal();
+                });
+            });
+        }
+
+        // Открытие модального окна для добавления к заказу
+        function openAddToOrderModal() {
+            const modal = document.getElementById('add-to-order-modal');
+            const container = document.getElementById('add-products-container');
+
+            // Показываем продукты первой категории
+            renderProductsByCategory('hookahs', container);
+
+            modal.classList.add('active');
+        }
+
+        // Подтверждение добавления к заказу
+        document.getElementById('confirm-add').addEventListener('click', function() {
+            if (currentOrder.items.length === 0) {
+                alert('Пожалуйста, добавьте товары для добавления к заказу');
+                return;
+            }
+
+            const order = orders.find(o => o.id === selectedOrderId);
+            if (!order) return;
+
+            // Добавляем товары к существующему заказу
+            currentOrder.items.forEach(newItem => {
+                const existingItem = order.items.find(item => item.id === newItem.id);
+
+                if (existingItem) {
+                    existingItem.quantity += newItem.quantity;
+                } else {
+                    order.items.push({...newItem});
+                }
+            });
+
+            // Пересчитываем общую сумму
+            order.total = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            saveOrders();
+            renderOrders();
+
+            // Закрываем модальное окно и сбрасываем текущий заказ
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            currentOrder = {
+                table: null,
+                items: []
+            };
+            updateCurrentOrderDisplay();
+
+            alert('Товары успешно добавлены к заказу!');
+        });
+
+        // Открытие модального окна для завершения заказа
+        function openCompleteOrderModal() {
+            const modal = document.getElementById('complete-order-modal');
+            const detailsContainer = document.getElementById('complete-order-details');
+            const order = orders.find(o => o.id === selectedOrderId);
+
+            if (!order) return;
+
+            detailsContainer.innerHTML = `
+                <p><strong>Стол №${order.table}</strong></p>
+                <div class="order-items">
+                    ${order.items.map(item => `
+                        <div class="order-item">
+                            <span>${item.name}</span>
+                            <span>${item.quantity} x ${item.price} руб.</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="current-order-total">
+                    Итого: ${order.total} руб.
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        // Подтверждение завершения заказа
+        document.getElementById('confirm-complete').addEventListener('click', function() {
+            const orderIndex = orders.findIndex(o => o.id === selectedOrderId);
+            if (orderIndex === -1) return;
+
+            const completedOrder = orders.splice(orderIndex, 1)[0];
+            completedOrder.completedAt = new Date().toLocaleString('ru-RU');
+            orderHistory.push(completedOrder);
+
+            saveOrders();
+            saveOrderHistory();
+            renderOrders();
+
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+
+            alert('Заказ успешно завершен!');
+        });
+
+        // Закрытие модальных окон
+        document.querySelectorAll('.close-modal').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            });
+        });
+
+        // Добавление нового продукта
+        document.getElementById('add-product-btn').addEventListener('click', function() {
+            const category = document.getElementById('product-category').value;
+            const name = document.getElementById('product-name').value;
+            const price = parseInt(document.getElementById('product-price').value);
+
+            if (!name || !price) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+
+            const newProduct = {
+                id: Date.now(),
+                category,
+                name,
+                price
+            };
+
+            products.push(newProduct);
+            saveProducts();
+            renderProductsList();
+
+            // Очищаем поля формы
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-price').value = '';
+
+            alert('Продукт успешно добавлен!');
+        });
+
+        // Отображение списка продуктов
+        function renderProductsList() {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '';
+
+            const categories = {
+                hookahs: 'Кальяны',
+                drinks: 'Напитки',
+                snacks: 'Перекус'
+            };
+
+            Object.keys(categories).forEach(category => {
+                const categoryProducts = products.filter(p => p.category === category);
+
+                if (categoryProducts.length > 0) {
+                    const categoryElement = document.createElement('div');
+                    categoryElement.innerHTML = `
+                        <h3>${categories[category]}</h3>
+                        <div class="products-grid">
+                            ${categoryProducts.map(product => `
+                                <div class="product-card">
+                                    <div class="product-name">${product.name}</div>
+                                    <div class="product-price">${product.price} руб.</div>
+                                    <button class="danger delete-product" data-id="${product.id}">Удалить</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    productsList.appendChild(categoryElement);
+                }
+            });
+
+            // Добавляем обработчики для кнопок удаления
+            document.querySelectorAll('.delete-product').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.id);
+                    if (confirm('Вы уверены, что хотите удалить этот продукт?')) {
+                        products = products.filter(p => p.id !== productId);
+                        saveProducts();
+                        renderProductsList();
+                    }
+                });
+            });
+        }
+
+        // Отображение истории заказов
+        function renderHistory() {
+            const tableBody = document.getElementById('history-table-body');
+            const totalOrders = document.getElementById('total-orders');
+            const totalRevenue = document.getElementById('total-revenue');
+            const averageCheck = document.getElementById('average-check');
+
+            tableBody.innerHTML = '';
+
+            if (orderHistory.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4">Нет завершенных заказов</td></tr>';
+                totalOrders.textContent = '0';
+                totalRevenue.textContent = '0';
+                averageCheck.textContent = '0';
+                return;
+            }
+
+            let revenue = 0;
+
+            orderHistory.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${order.completedAt}</td>
+                    <td>${order.table}</td>
+                    <td>${order.total} руб.</td>
+                    <td>${order.items.map(item => `${item.name} (${item.quantity})`).join(', ')}</td>
+                `;
+                tableBody.appendChild(row);
+
+                revenue += order.total;
+            });
+
+            totalOrders.textContent = orderHistory.length;
+            totalRevenue.textContent = revenue;
+            averageCheck.textContent = Math.round(revenue / orderHistory.length);
+        }
+
+        // Инициализация приложения
+        function init() {
+            renderOrders();
+            renderProductsByCategory('hookahs', document.getElementById('products-container'));
+            renderProductsList();
+            renderHistory();
+        }
+
+        // Запуск приложения
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
