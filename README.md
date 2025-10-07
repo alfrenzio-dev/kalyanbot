@@ -1,2 +1,0 @@
-# kalyanbot
-admin
